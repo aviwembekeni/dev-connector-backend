@@ -1,5 +1,6 @@
 const express = require('express');
 const connectDB = require('./config/db');
+const cors = requre('cors');
 const path = require('path');
 
 const app = express();
@@ -9,6 +10,16 @@ connectDB();
 
 // Init Middleware
 app.use(express.json());
+
+// Configure CORS to allow requests from your frontend server
+app.use(
+  cors({
+    origin: 'https://dev-connector-1t9o.onrender.com',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // If you need to include credentials like cookies in requests
+    optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
+  })
+);
 
 // Define Routes
 app.use('/api/users', require('./routes/api/users'));
