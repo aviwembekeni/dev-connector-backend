@@ -12,9 +12,14 @@ connectDB();
 app.use(express.json());
 
 // Configure CORS to allow requests from your frontend server
+const allowedOrigins = [
+  'https://dev-connector-1t9o.onrender.com',
+  'http://localhost:3000'
+];
+
 app.use(
   cors({
-    origin: 'https://dev-connector-1t9o.onrender.com',
+    origin: allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // If you need to include credentials like cookies in requests
     optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
