@@ -17,14 +17,22 @@ const allowedOrigins = [
   'http://localhost:3000'
 ];
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // If you need to include credentials like cookies in requests
-    optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
-  })
-);
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin, like mobile apps or curl requests
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // Allow cookies to be sent
+  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+app.use(cors(corsOptions));
 
 // Define Routes
 app.use('/api/users', require('./routes/api/users'));
