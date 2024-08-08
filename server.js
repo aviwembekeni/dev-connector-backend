@@ -8,10 +8,8 @@ const app = express();
 // Connect Database
 connectDB();
 
-// Init Middleware
-app.use(express.json());
-
 // Configure CORS to allow requests from your frontend server
+
 const allowedOrigins = [
   'https://dev-connector-1t9o.onrender.com',
   'http://localhost:3000'
@@ -19,20 +17,21 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin, like mobile apps or curl requests
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Allow cookies to be sent
-  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
+  credentials: true,
+  optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
+
+// Init Middleware
+app.use(express.json());
 
 // Define Routes
 app.use('/api/users', require('./routes/api/users'));
